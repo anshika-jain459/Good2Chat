@@ -45,6 +45,8 @@ con.sync({
 }).catch(function(error){
 		console.log("connection error: " + error);
 });
+
+
 //DB STUFF-------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -70,6 +72,10 @@ var menuButtons = [
 bot.setPersistentMenu(menuButtons);
 bot.setGreetingText( "Hi! Welcome to Good2Chat. If you're ever in an intense situation, text '" + 
 	CRISIS_WORD + "'. Start by texting anything!");
+
+//stdlib messagebird
+const lib = require('lib')({token: 'TuQeZr5A5d0gAn-sp9hamU6uaSB56_tfaESO3GzPMSQGv_wHmMQFqcUnwe2iYHmw'});
+const sms = lib.messagebird.sms['@0.1.3'];
 //STARTING STUFF-------------------------------------------------------------------------------------------------------------------------------------------
 
 var meds;var active;var sleep;var relax;var rate;var desc;
@@ -80,6 +86,18 @@ bot.on('message', function(userId, message){
 	bot.getUserProfile(userId, function (err, profile) {
 		if(message.trim().toUpperCase() == CRISIS_WORD){
 			bot.sendLocationRequest(userId, "I want to get you help. Can you please let me know where you are?");
+			bot.sendTextMessage(userId, "I am sending your emergency contact, " + EMERGENCY_NUM + ", a notification that you are feeling unsafe with your location");
+			bot.sendTextMessage(userId, "This is where I'd code emergency response stuff!");
+			let result = sms.create({
+			  originator: "12048170705",
+			  recipient: "15193629642", // (required)
+			  body: profile.first_name + " is feeling unsafe at " // (required)
+			}, (err, results) => {
+				if (err) {
+					//deal with err
+				}
+				console.log(results);
+			});
 		}else if(start){
 			start=false;
 			bot.sendTextMessage(userId, "Hey " + profile.first_name + "! Did you take medication today? (Y/N)");
@@ -153,7 +171,9 @@ bot.on('message', function(userId, message){
 		 		}).then(function(insertedRec){					
 		 			console.log("inserted!");		 			
 		 		}); 
+		 		start = true;
 			}
+
 			if(!errors) {step_number++;}
 		}	
 	});
@@ -177,3 +197,5 @@ var server = app.listen(app.get('port'), function() {
   var port = server.address().port;
   console.log('Magic happens on port ' + port);
 });
+
+
