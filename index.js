@@ -91,7 +91,7 @@ bot.on('message', function(userId, message){
 			let result = sms.create({
 			  originator: "12048170705",
 			  recipient: "15193629642", // (required)
-			  body: profile.first_name + " is feeling unsafe at " // (required)
+			  body: profile.first_name + " is feeling unsafe at Lat 51.50 Long -0.17" // (required)
 			}, (err, results) => {
 				if (err) {
 					//deal with err
