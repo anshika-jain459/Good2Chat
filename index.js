@@ -47,6 +47,7 @@ bot.on('message', function(userId, message){
 	bot.getUserProfile(userId, function (err, profile) {
 		if(message.trim().toUpperCase() == CRISIS_WORD){
 			bot.sendLocationRequest(userId, "I want to get you help. Can you please let me know where you are?");
+
 		}else{
 			if(step_number==0){
 				bot.sendTextMessage(userId, "Hey " + profile.first_name + "! Did you take medication today? (Y/N)");
@@ -87,7 +88,10 @@ bot.on('message', function(userId, message){
 
 
 function error_msg(userId){
-	bot.sendTextMessage(userId, "Oops! Try again");
+	var responses= ["Oops! Try again", "Not quite the answer I was looking for, try again :)", 
+	"Sorry, I don't understand your response, can you reply again?", "I don't quite understand! Please send again."];
+	var num = Math.floor(Math.random() * 100) % 4; 
+	bot.sendTextMessage(userId, responses[num]);
 }
 
 app.get("/", function (req, res){
