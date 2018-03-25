@@ -1,12 +1,15 @@
 //literally pasted from tutorial
 'use strict'	
 
+var Sequelize = require('sequelize');
 const express = require('express')
 const bodyParser = require('body-parser')
 const request = require('request')
 const app = express()
-//STARTING STUFF
+
+//STARTING STUFF-------------------------------------------------------------------------------------------------------------------------------------------
 const CRISIS_WORD = "MANGO";
+const EMERGENCY_NUM = "15193629642";
 var FBBotFramework = require('fb-bot-framework');
 var bot = new FBBotFramework({
 	page_token:"EAAVLUYzaFhIBAEmIX9u5FszDjdy1roZBmz5SzfPnmPan0emZBZC5hZBVV4lD4wYXN4T7ZC07Et7ilnfx1hejLOuW0yTuz0XyctKdD4eDIlOZAntfh4A86XBxSqbVZCPu0gZCI7RjhrIaFR7UznoadZA9NDQXrlGL9lP5IZBOL3ZAKNfvvIPkRhrt0pY",
@@ -31,12 +34,11 @@ var menuButtons = [
 bot.setPersistentMenu(menuButtons);
 bot.setGreetingText( "Hi! Welcome to Good2Chat. If you're ever in an intense situation, text '" + 
 	CRISIS_WORD + "'. Start by texting anything!");
-//STARTING STUFF
+//STARTING STUFF-------------------------------------------------------------------------------------------------------------------------------------------
 
 
 // Setup listener for incoming messages
 bot.on('message', function(userId, message){
-	var name;
 	var meds;
 	var active;
 	var sleep;
@@ -47,7 +49,6 @@ bot.on('message', function(userId, message){
 	bot.getUserProfile(userId, function (err, profile) {
 		if(message.trim().toUpperCase() == CRISIS_WORD){
 			bot.sendLocationRequest(userId, "I want to get you help. Can you please let me know where you are?");
-
 		}else{
 			if(step_number==0){
 				bot.sendTextMessage(userId, "Hey " + profile.first_name + "! Did you take medication today? (Y/N)");
@@ -93,6 +94,40 @@ function error_msg(userId){
 	var num = Math.floor(Math.random() * 100) % 4; 
 	bot.sendTextMessage(userId, responses[num]);
 }
+
+//DB STUFF-------------------------------------------------------------------------------------------------------------------------------------------
+var con = new Sequelize('dbnode', 'root', '',{
+	host: 'localhost',
+	dialect: 'mysql',
+	pool:{
+		max: 5,
+	    min: 0,
+	    acquire: 30000,
+	    idle: 1000
+	}
+}); 
+var dailyEntry = con.define('dailyTable', {//making a new table
+	identifier: {
+		type: Sequelize.STRING,
+		unique: false, // all titles are unique
+		//if you try to insert something thats already existing, 
+		//sq will throw an error
+		allowNull: false,
+	},
+	meds: {type: Sequelize.BOOLEAN},
+	active: {type: Sequelize.INTEGER},
+	sleep: {type: Sequelize.INTEGER},
+	relax: {type: Sequelize.BOOLEAN},
+	rate: {type: Sequelize.INTEGER}, 
+	desc: {type: Sequelize.TEXT}
+}, {
+	timestamps: false
+}); 
+//DB STUFF-------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
 
 app.get("/", function (req, res){
 	res.send("hello world");

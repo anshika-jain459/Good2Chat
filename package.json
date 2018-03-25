@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.3",
-    "fb-bot-framework": "^0.3.0"
+    "fb-bot-framework": "^0.3.0",
+    "sequelize": "^4.37.4"
   }
 }
