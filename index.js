@@ -102,10 +102,11 @@ var con = new Sequelize('dbnode', 'root', '',{
 	pool:{
 		max: 5,
 	    min: 0,
-	    acquire: 30000,
+	    acquire: 80000,
 	    idle: 1000
 	}
 }); 
+
 var dailyEntry = con.define('dailyTable', {//making a new table
 	identifier: {
 		type: Sequelize.STRING,
@@ -121,8 +122,17 @@ var dailyEntry = con.define('dailyTable', {//making a new table
 	rate: {type: Sequelize.INTEGER}, 
 	desc: {type: Sequelize.TEXT}
 }, {
-	timestamps: false
+	timestamps: true
 }); 
+
+con.sync({
+	force: true,//clears out old tables of same name
+	logging: console.log
+}).then(function(){
+	console.log("connected!!");
+}).catch(function(error){
+		console.log("connection error: " + error);
+});
 //DB STUFF-------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -133,4 +143,10 @@ app.get("/", function (req, res){
 	res.send("hello world");
 });
 //Make Express listening
-app.listen(8000); 
+app.set('port', 8000); 
+
+// Listen for requests
+var server = app.listen(app.get('port'), function() {
+  var port = server.address().port;
+  console.log('Magic happens on port ' + port);
+});
