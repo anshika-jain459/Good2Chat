@@ -40,40 +40,55 @@ bot.on('message', function(userId, message){
 	var meds;
 	var active;
 	var sleep;
+	var relax;
 	var rate;
 	var desc;
+	var errors = false;
 	bot.getUserProfile(userId, function (err, profile) {
-    	name = profile.first_name;
+		if(message.trim().toUpperCase() == CRISIS_WORD){
+			bot.sendLocationRequest(userId, "I want to get you help. Can you please let me know where you are?");
+		}else{
+			if(step_number==0){
+				bot.sendTextMessage(userId, "Hey " + profile.first_name + "! Did you take medication today? (Y/N)");
+				meds = message.trim();
+				if(meds.toUpperCase()!="Y" && meds.toUpperCase()!="N") {error_msg(userId); errors=true;}
+			}else if(step_number==1){
+				bot.sendTextMessage(userId, "Cool cool, how many hours were you active today?");
+				active = parseInt(message.trim());
+				if(active == NaN) {error_msg(userId);  errors=true;}
+			}else if(step_number==2){
+				bot.sendTextMessage(userId, "Moving on, how many hours did you sleep last night, " + profile.first_name + "?");
+				sleep = parseInt(message.trim());
+				if(sleep == NaN) {error_msg(userId);  errors=true;}
+			}else if(step_number==3){
+				bot.sendTextMessage(userId, "Thanks for letting me know, " + profile.first_name + "! Did you get a chance to relax or hang out with friends today? (Y/N)");
+				relax = message.trim();
+				if(relax.toUpperCase()!="Y" && relax.toUpperCase()!="N") {error_msg(userId);  errors=true;}
+			}else if(step_number==4){
+				bot.sendTextMessage(userId, "Thanks for answering my questions! Just a few more. How would you rate your day? (1 to 10, 10 being an awesome day)");
+				rate = parseInt(message.trim());
+				if(rate == NaN || rate < 1 || rate > 10) {error_msg(userId);  errors=true;}
+			}else if(step_number==5){
+		 		bot.sendTextMessage(userId, "Last thing: give me a quick description of your day.");
+		 		desc = message.trim();
+			}else if(step_number==6){
+		 		bot.sendTextMessage(userId, "Thank you " + profile.first_name + "! Our daily session is done.");
+		 		bot.sendTextMessage(userId, "You can always text me for more entries, or if you ever feel unsafe. Remember your emergency word: " + CRISIS_WORD);
+		 		bot.sendTextMessage(userId, "Have an awesome day!");
+		 		//gif
+		 		step_number = 0;
+		 		errors = true;
+		 		//write to db
+			}
+			if(!errors) {step_number++;}
+		}	
 	});
-	if(message.trim().toUpperCase() == CRISIS_WORD){
-		bot.sendLocationRequest(userId, "I want to get you help. Can you please let me know where you are?");
-	}else{
-		if(step_number==0){
-			bot.sendTextMessage(userId, "Hey " + name + "! Did you take medication today? (Y/N)");
-			meds = response.trim();
-			if(meds.toUpperCase!="Y" || meds.toUpperCase!="N") error_msg();
-		}else if(step_number==1){
-			bot.sendTextMessage(userId, "Cool cool, how many hours were you active today?");
-		}else if(step_number==2){
-			bot.sendTextMessage(userId, "Moving on, how many hours did you sleep last night, " + name + "?");
-		}else if(step_number==3){
-			bot.sendTextMessage(userId, "Thanks for letting me know, " + name + "! Did you get a chance to relax or hang out with friends today?");
-		}else if(step_number==4){
-			bot.sendTextMessage(userId, "Thanks for answering my questions! Just a few more. How would you rate your day? (1 to 10, 10 being an awesome day)");
-		}else if(step_number==5){
-	 		bot.sendTextMessage(userId, "Last thing: give me a quick description of your day.");
-		}else if(step_number==6){
-	 		bot.sendTextMessage(userId, "Thank you " + name + "! Our daily session is done.");
-	 		bot.sendTextMessage(userId, "You can always text me for more entries, or if you ever feel unsafe. Remember your emergency word: " + CRISIS_WORD);
-	 		bot.sendTextMessage(userId, "Have an awesome day!");
-	 		//gif
-	 		step_number = 0;
-		}
-		step_number++;
-	}	
-	
 });
 
+
+function error_msg(userId){
+	bot.sendTextMessage(userId, "Oops! Try again");
+}
 
 app.get("/", function (req, res){
 	res.send("hello world");
