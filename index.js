@@ -5,13 +5,6 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const request = require('request')
 const app = express()
-const facebook = require('fb-messenger-bot-api');
-const client = new facebook.Client(process.env.PAGE_ACCESS_TOKEN);
-
-//client.setGreetingMessage('Message that will be visible first thing when opening chat window with your bot/page')
-//.then();
-
-const CRISIS_WORD = "MANGO";
 
 var FBBotFramework = require('fb-bot-framework');
 //init
@@ -20,6 +13,8 @@ var bot = new FBBotFramework({
 	verify_token: "verify_token"
 });
 
+const CRISIS_WORD = "MANGO";
+var step_number = 0;
 // Setup Express middleware for /webhook
 app.use('/webhook', bot.middleware());
 
@@ -39,18 +34,26 @@ var menuButtons = [
 ];
 bot.setPersistentMenu(menuButtons);
 
-bot.setGreetingText( "Hi! Welcome to Good2Chat. If you're ever in an intense situation, text 'mango'. Start by texting 'helllo!'");
+bot.setGreetingText( "Hi! Welcome to Good2Chat. If you're ever in an intense situation, text '" + 
+	CRISIS_WORD + "'. Start by texting anything!");
 //STARTING STUFF
 
 // Setup listener for incoming messages
 bot.on('message', function(userId, message){
 	if(message.trim().toUpperCase() == CRISIS_WORD){
-		bot.sendTextMessage(userId, "Echo crisis: "+ message);
+		bot.sendLocationRequest(userId, "I want to get you help. Can you please let me know where you are?");
+	}else{
+		if(step_number==0){
+			bot.sendTextMessage(userId, "Did you take medication today?");
+		}else if(step_number==1){
+			bot.sendTextMessage(userId, "Did you take medication today?");
+		}else if(step_number==2){
+			
+		}
+		step++;
 	}	
-
+	
 });
-
-
 
 
 app.get("/", function (req, res){
