@@ -1,4 +1,3 @@
-//literally pasted from tutorial
 'use strict'	
 
 var Sequelize = require('sequelize');
@@ -19,7 +18,7 @@ var con = new Sequelize('dbnode', 'root', '',{
 	}
 }); 
 
-var dailyEntry = con.define('dailyTable', {//making a new table
+var dailyEntry = con.define('dailyTables', {//making a new table
 	identifier: {
 		type: Sequelize.STRING,
 		unique: false, // all titles are unique
@@ -38,10 +37,35 @@ var dailyEntry = con.define('dailyTable', {//making a new table
 }); 
 
 con.sync({
-	force: true,//clears out old tables of same name
+//	force: true,//clears out old tables of same name
 	logging: console.log
 }).then(function(){
+	dailyEntry.create({
+		identifier: 'identifier',
+		dbmeds: 0,
+		dbactive: 1,
+		dbsleep: 7,
+		dbrelax: 1,
+		dbrate: 10, 
+		dbdesc: "hello"
+	}).then(function (stuff){
+	});
+
+
 	console.log("connected!!");
+
+/*	con.query("SELECT * FROM dailyTables", function(error, rows, fields){
+		if(!!error){
+			console.log('error');
+		}else{
+			console.log('gud\n');
+			console.log(rows);
+			console.log("rate, " + rows[0].dbrate);
+		}
+	});  */
+
+	
+	
 }).catch(function(error){
 		console.log("connection error: " + error);
 });
@@ -66,7 +90,7 @@ var menuButtons = [
     {	
         "type": "web_url",
         "title": "Dashboard",
-        "url": "http://google.com/"
+        "url": "localhost:5000"
     }
 ];
 bot.setPersistentMenu(menuButtons);
@@ -143,6 +167,9 @@ bot.on('message', function(userId, message){
 					error_msg(userId);  
 					errors=true;
 				}else{
+					if(rate<5){
+						bot.sendTextMessage(userId, "Doesnt look like a good day :( I'll queue a counsellor session for you");
+					}
 					bot.sendTextMessage(userId, "Last thing: give me a quick description of your day. Include why you rated the day " + rate);
 				}
 			}else if(step_number==5){		 		
@@ -154,22 +181,25 @@ bot.on('message', function(userId, message){
 		 		step_number = 0;
 		 		errors = true;
 		 		//write to db
+		 		console.log("inserting....")
 		 		console.log("meds: " + meds);
 	 			console.log("active: " + active);
 	 			console.log("sleep: " + sleep);
 	 			console.log("relax: " + relax);
 	 			console.log("rate: " + rate);
 	 			console.log("desc: " + desc);
+
 		 		dailyEntry.create({
 		 			identifier: 'identifier',
-					dbmeds: meds != "Y",
+					dbmeds: meds == "Y",
 					dbactive: active,
 					dbsleep: sleep,
-					dbrelax: relax != "Y",
+					dbrelax: relax == "Y",
 					dbrate: rate, 
 					dbdesc: desc
 		 		}).then(function(insertedRec){					
-		 			console.log("inserted!");		 			
+		 			console.log("inserted!");
+		 			console.log(insertedRec);	 			
 		 		}); 
 		 		start = true;
 			}
@@ -189,7 +219,10 @@ function error_msg(userId){
 
 //port stuff
 app.get("/", function (req, res){
-	res.send("hello world");
+	con.query("SELECT * FROM dailyTables").then(results => {
+		console.log(results);
+	});
+
 });
 app.set('port', 8000); 
 // Listen for requests
