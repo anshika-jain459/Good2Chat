@@ -1,4 +1,4 @@
-![alt text](https://imgur.com/a/zkoCjSm "landingimage")
+![alt text](https://i.imgur.com/6ikWS21.png "landingimage")
 
 **Best use of Data Analytics** at [SheHacks2!](https://devpost.com/software/good2chat-bot)
 
