@@ -1,6 +1,6 @@
 ![alt text](https://i.imgur.com/PEfjlhq.png "landingimage")
 
-**Best use of Data Analytics** at [SheHacks2!](https://devpost.com/software/good2chat-bot)
+## Best use of Data Analytics at [SheHacks2!](https://devpost.com/software/good2chat-bot)
 
 [Presentation Slides](https://docs.google.com/presentation/d/1iUBBSWKeeqphWWoZhEdyqNbJK32NzZjVm3YGKZxRBJM/edit?usp=sharing)
 
