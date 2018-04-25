@@ -1,4 +1,3 @@
-const processMessage = require('../helpers/messageProcessing');
 module.exports = (req, res) => {
 	 if (req.body.object === 'page') {
 	 	req.body.entry.forEach(entry => {

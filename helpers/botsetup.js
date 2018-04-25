@@ -3,7 +3,7 @@ const request = require('request');
 
 var FBBotFramework = require('fb-bot-framework');
 var bot = new FBBotFramework({
-	page_token:"EAAfXrjONIi4BAMuZBvRdS9B8UlHN9EGFjLOCUR1FiK7Yk4ZCkXUkhQU6Wi7GVRzCSk2VLClYO65490VOeFA3BiWF2Chk6dPcZAZC6PGcvsrxuurvlEp3bSZCtbFlfuu2GVg8kgSCZCGo1l0LgbYQK2hDZBVgdF17u5X8VJde1iXPaCqzxn3yyQT",
+	page_token:FACEBOOK_ACCESS_TOKEN,
 	verify_token: "verify_token"
 });
 
