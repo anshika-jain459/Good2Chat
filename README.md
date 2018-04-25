@@ -12,6 +12,11 @@ Users can also set an emergency word and contact, and their contact will be aler
 I'm quite proud of this project! I learned plenty, targeted an issue I struggle with, and got some recognition along the way.
 
 **Goals moving forward:**
-- clean up the attrocious file structure
+- Make a fully functional dashboard
 - integrate nlp to analyze the journal entry users provide
-- find an alternative to ngrok so the app will always work, not just when I run the server on my machine
+
+**How to set up**
+- use ngrok to create a webhook to the bot's port (I'm using 8000)
+- Make a facebook app, and update it's webhook endpoint with the ngrok url
+- Make sure the bot is running locally!
+- Enjoy
