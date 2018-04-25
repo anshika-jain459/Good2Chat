@@ -51,20 +51,7 @@ con.sync({
 	}).then(function (stuff){
 	});
 
-
-	console.log("connected!!");
-
-/*	con.query("SELECT * FROM dailyTables", function(error, rows, fields){
-		if(!!error){
-			console.log('error');
-		}else{
-			console.log('gud\n');
-			console.log(rows);
-			console.log("rate, " + rows[0].dbrate);
-		}
-	});  */
-
-	
+	console.log("connected!!");	
 	
 }).catch(function(error){
 		console.log("connection error: " + error);
@@ -75,27 +62,22 @@ con.sync({
 
 
 //STARTING STUFF-------------------------------------------------------------------------------------------------------------------------------------------
-const CRISIS_WORD = "MANGO";
-const EMERGENCY_NUM = "15193629642";
-var FBBotFramework = require('fb-bot-framework');
-var bot = new FBBotFramework({
-	page_token:"EAAVLUYzaFhIBAEmIX9u5FszDjdy1roZBmz5SzfPnmPan0emZBZC5hZBVV4lD4wYXN4T7ZC07Et7ilnfx1hejLOuW0yTuz0XyctKdD4eDIlOZAntfh4A86XBxSqbVZCPu0gZCI7RjhrIaFR7UznoadZA9NDQXrlGL9lP5IZBOL3ZAKNfvvIPkRhrt0pY",
-	verify_token: "verify_token"
-});
+
+var chatbot = require('./helpers/messageProcessing');
+var bot = chatbot.bot;
+const CRISIS_WORD = chatbot.CRISIS_WORD;
+const EMERGENCY_NUM = chatbot.EMERGENCY_NUM;	
 var step_number = 0;
 // Setup Express middleware for /webhook
 app.use('/webhook', bot.middleware());
-//make a menu
-var menuButtons = [
-    {	
-        "type": "web_url",
-        "title": "Dashboard",
-        "url": "localhost:5000"
-    }
-];
-bot.setPersistentMenu(menuButtons);
-bot.setGreetingText( "Hi! Welcome to Good2Chat. If you're ever in an intense situation, text '" + 
-	CRISIS_WORD + "'. Start by texting anything!");
+
+
+const verificationController = require('./controllers/verification');
+const messageWebhookController = require('./controllers/messageWebhook');
+app.get('/', verificationController);
+app.post('/', messageWebhookController);
+
+
 
 //stdlib messagebird
 const lib = require('lib')({token: 'TuQeZr5A5d0gAn-sp9hamU6uaSB56_tfaESO3GzPMSQGv_wHmMQFqcUnwe2iYHmw'});

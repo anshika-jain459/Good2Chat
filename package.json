@@ -14,5 +14,6 @@
     "lib": "^3.0.2",
     "sequelize": "^4.37.4",
     "stdlib": "^0.6.0"
-  }
+  },
+  "start": "node index.js"
 }
