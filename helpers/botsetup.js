@@ -1,4 +1,4 @@
-const FACEBOOK_ACCESS_TOKEN = 'EAAfXrjONIi4BAMuZBvRdS9B8UlHN9EGFjLOCUR1FiK7Yk4ZCkXUkhQU6Wi7GVRzCSk2VLClYO65490VOeFA3BiWF2Chk6dPcZAZC6PGcvsrxuurvlEp3bSZCtbFlfuu2GVg8kgSCZCGo1l0LgbYQK2hDZBVgdF17u5X8VJde1iXPaCqzxn3yyQT';
+const FACEBOOK_ACCESS_TOKEN = 'my token';
 const request = require('request');
 
 var FBBotFramework = require('fb-bot-framework');
